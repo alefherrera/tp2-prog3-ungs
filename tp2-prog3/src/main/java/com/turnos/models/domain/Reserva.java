@@ -15,8 +15,10 @@ public class Reserva {
 	@DatabaseField
 	private int cantHoras;
 	@DatabaseField
+	private int idCliente;	
 	private Cliente cliente;
 	@DatabaseField
+	private int idCancha;
 	private Cancha cancha;
 	@DatabaseField
 	private ReservaEstado estado;
@@ -43,12 +45,14 @@ public class Reserva {
 	}
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+		this.idCliente = cliente.getId();
 	}
 	public Cancha getCancha() {
 		return cancha;
 	}
 	public void setCancha(Cancha cancha) {
 		this.cancha = cancha;
+		this.idCancha = cancha.getId();
 	}
 	public ReservaEstado getEstado() {
 		return estado;

@@ -11,7 +11,7 @@ import com.j256.ormlite.table.TableUtils;
 
 public class Persistencia {
 
-	private String databaseUrl = "jdbc:sqlite:sample.db";
+	private String databaseUrl = "jdbc:sqlite:turnos.db";
 	private ConnectionSource connectionSource;
 	private static Persistencia instance;
 	
