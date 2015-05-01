@@ -15,7 +15,7 @@ public class ReservaService {
 	private List<Cancha> canchas; 
 	private List<Reserva> reservas;
 	
-	private void CanchaService(){
+	private void ReservaService(){
 		
 	}
 	
