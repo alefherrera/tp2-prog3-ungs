@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "cancha")
 public class Cancha {
-	@DatabaseField(id = true, allowGeneratedIdInsert = true, generatedId = true)
+	@DatabaseField(allowGeneratedIdInsert = true, generatedId = true)
 	private int id;
 	@DatabaseField
 	private String nombre;
