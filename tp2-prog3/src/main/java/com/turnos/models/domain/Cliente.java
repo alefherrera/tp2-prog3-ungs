@@ -1,6 +1,6 @@
 package com.turnos.models.domain;
 
-import com.turnos.interfaces.ICliente;
+import com.turnos.interfaces.models.ICliente;
 
 public class Cliente implements ICliente {
 	private int id;

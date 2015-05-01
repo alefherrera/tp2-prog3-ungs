@@ -1,4 +1,4 @@
-package com.turnos.interfaces;
+package com.turnos.interfaces.models;
 
 public interface ICliente {
 
