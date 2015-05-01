@@ -1,4 +1,4 @@
-package com.turnos.interfaces.models;
+package com.turnos.models.interfaces;
 
 import java.util.Date;
 

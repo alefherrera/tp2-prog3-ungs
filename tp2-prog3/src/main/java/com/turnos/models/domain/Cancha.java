@@ -1,6 +1,6 @@
 package com.turnos.models.domain;
 
-import com.turnos.interfaces.models.ICancha;
+import com.turnos.models.interfaces.ICancha;
 
 public class Cancha implements ICancha {
 	private int id;

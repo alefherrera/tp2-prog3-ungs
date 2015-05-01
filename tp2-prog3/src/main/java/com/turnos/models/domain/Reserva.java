@@ -3,7 +3,7 @@ package com.turnos.models.domain;
 import java.util.Date;
 
 import com.turnos.enums.ReservaEstado;
-import com.turnos.interfaces.models.IReserva;
+import com.turnos.models.interfaces.IReserva;
 
 public class Reserva implements IReserva {
 	private Date fecha;
