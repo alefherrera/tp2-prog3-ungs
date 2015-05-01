@@ -1,8 +1,15 @@
 package com.turnos.models.domain;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "cliente")
 public class Cliente  {
+	@DatabaseField(id = true)
 	private int id;
+	@DatabaseField
 	private String nombre;
+	@DatabaseField
 	private int telefono;
 	private String[] imagenes;
 	public int getId() {

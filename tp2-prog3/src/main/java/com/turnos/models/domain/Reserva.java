@@ -2,14 +2,23 @@ package com.turnos.models.domain;
 
 import java.util.Date;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.turnos.enums.ReservaEstado;
 
+@DatabaseTable(tableName = "reserva")
 public class Reserva {
+	@DatabaseField
 	private Date fecha;
+	@DatabaseField
 	private double pago;
+	@DatabaseField
 	private int cantHoras;
+	@DatabaseField
 	private Cliente cliente;
+	@DatabaseField
 	private Cancha cancha;
+	@DatabaseField
 	private ReservaEstado estado;
 	public Date getFecha() {
 		return fecha;
