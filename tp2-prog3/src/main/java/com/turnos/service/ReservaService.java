@@ -1,5 +1,6 @@
 package com.turnos.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -7,19 +8,26 @@ import java.util.stream.Collectors;
 
 import com.turnos.models.domain.Cancha;
 import com.turnos.models.domain.Reserva;
+import com.turnos.persistencia.Persistencia;
 import com.turnos.service.bean.CanchaBean;
 
 public class ReservaService {
 	
-	private ReservaService _instance = null;
+	private static ReservaService _instance = null;
 	private List<Cancha> canchas; 
 	private List<Reserva> reservas;
 	
-	private void ReservaService(){
+	private ReservaService() throws SQLException{
+		canchas = Persistencia.getInstance().getAll(Cancha.class);
+		if (canchas == null)
+			canchas = new ArrayList<Cancha>();	
+		reservas = Persistencia.getInstance().getAll(Reserva.class);
+		if (reservas == null)
+			reservas = new ArrayList<Reserva>();
 		
 	}
 	
-	public ReservaService getInstance(){
+	public static ReservaService getInstance() throws SQLException{
 		if(_instance == null)
 			_instance = new ReservaService();
 		return _instance;
@@ -32,7 +40,7 @@ public class ReservaService {
 		List<CanchaBean> dis = new ArrayList<CanchaBean>();
 		
 		for (Cancha cancha : canchas) {
-			Boolean[] horarios = new Boolean[23];
+			boolean[] horarios = new boolean[23];
 			List<Reserva> reservaCancha = new ArrayList<Reserva>();
 			reservaCancha = reservadas.stream().filter(x-> x.getCancha() == cancha).collect(Collectors.toList());
 			
