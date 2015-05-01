@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "cliente")
 public class Cliente  {
-	@DatabaseField(id = true)
+	@DatabaseField(allowGeneratedIdInsert = true, generatedId = true)
 	private int id;
 	@DatabaseField
 	private String nombre;
