@@ -73,7 +73,20 @@ public class Persistencia {
 		closeDb();
 
 		return ret;
-	}	
+	}
+	
+	public <T> List<T>getWhere(T obj) throws SQLException{
+		OpenDb();
+		
+		List<T> ret = null;
+		Dao<T, String> genericDao = extracted(obj);
+		
+		ret = genericDao.queryForMatching(obj);
+		
+		closeDb();
+
+		return ret;
+	}
 	
 	private void closeDb() throws SQLException {
 		connectionSource.close();
