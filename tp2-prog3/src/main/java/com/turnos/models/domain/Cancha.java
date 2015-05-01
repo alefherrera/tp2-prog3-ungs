@@ -1,9 +1,17 @@
 package com.turnos.models.domain;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "cancha")
 public class Cancha {
+	@DatabaseField(id =true)
 	private int id;
+	@DatabaseField
 	private String nombre;
+	@DatabaseField
 	private double precio;
+	@DatabaseField
 	private int cantMaxima;
 	public int getId() {
 		return id;
