@@ -1,13 +1,14 @@
 package com.turnos;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
+import com.turnos.models.domain.Cancha;
+import com.turnos.models.domain.Cliente;
+import com.turnos.models.domain.Reserva;
+import com.turnos.persistencia.Persistencia;
 
 public class App {
-	public static void main(String[] args) throws ClassNotFoundException {
+	/*public static void main(String[] args) throws ClassNotFoundException {
 		Class.forName("org.sqlite.JDBC");
 
 		Connection connection = null;
@@ -41,5 +42,13 @@ public class App {
 				System.err.println(e);
 			}
 		}
+	}*/
+	
+	public static void main(String[] args) throws SQLException{
+		Persistencia p = Persistencia.getInstance();
+		p.createTable(Cliente.class);
+		p.createTable(Cancha.class);
+		p.createTable(Reserva.class);
 	}
+	
 }

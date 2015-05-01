@@ -7,6 +7,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
 public class Persistencia {
 
@@ -18,10 +19,16 @@ public class Persistencia {
 		
 	}
 	
-	public Persistencia getInstance(){
+	public static Persistencia getInstance(){
 		if (instance == null)
 			instance = new Persistencia();
 		return instance;
+	}
+	
+	public <T> void createTable(Class<T> c) throws SQLException {
+		OpenDb();
+		TableUtils.createTable(connectionSource, c);		
+		closeDb();
 	}
 	
 	public <T> void insert(T obj) throws SQLException {
