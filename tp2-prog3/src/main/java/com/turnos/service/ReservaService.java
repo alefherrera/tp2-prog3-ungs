@@ -15,7 +15,7 @@ public class ReservaService {
 	private List<Cancha> canchas; 
 	private List<Reserva> reservas;
 	
-	private void CanchaService(){
+	private void ReservaService(){
 		
 	}
 	
@@ -25,7 +25,7 @@ public class ReservaService {
 		return _instance;
 	}
 	
-	public List<CanchaBean> disponibles(Date d){
+	public List<CanchaBean> ConsultarDisponibles(Date d){
 		List<Reserva> reservadas = new ArrayList<Reserva>();
 		reservadas  = reservas.stream().filter(x-> x.getFecha() == d).collect(Collectors.toList());
 		
