@@ -47,8 +47,7 @@ public class MainPage {
 		JButton btnAbmCanchas = new JButton("ABM Canchas");
 		btnAbmCanchas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				CanchasPage nuevo = new CanchasPage();
-				nuevo.setVisible(true);
+				new CanchasPage().setVisible(true);
 			}
 		});
 		btnAbmCanchas.setBounds(10, 118, 121, 41);
@@ -59,6 +58,11 @@ public class MainPage {
 		frame.getContentPane().add(btnReservar);
 		
 		JButton btnAbmClientes = new JButton("ABM Clientes");
+		btnAbmClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ClientesPage().setVisible(true);
+			}
+		});
 		btnAbmClientes.setBounds(273, 118, 121, 41);
 		frame.getContentPane().add(btnAbmClientes);
 	}
