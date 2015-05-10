@@ -36,4 +36,15 @@ public class Cliente  {
 	public void setImagenes(String[] imagenes) {
 		this.imagenes = imagenes;
 	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		//builder.append("Cliente [nombre=");
+		builder.append(nombre);
+		//builder.append("]");
+		return builder.toString();
+	}
+	
+	
+	
 }

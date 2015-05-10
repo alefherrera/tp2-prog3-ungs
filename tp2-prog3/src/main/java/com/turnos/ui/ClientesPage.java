@@ -2,6 +2,7 @@ package com.turnos.ui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,25 +11,20 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import com.turnos.models.domain.Cancha;
-import com.turnos.persistencia.Persistencia;
 import javax.swing.border.BevelBorder;
-import java.awt.FlowLayout;
+import javax.swing.border.EmptyBorder;
 
-public class CanchasPage extends JFrame {
+import com.turnos.models.domain.Cliente;
+import com.turnos.persistencia.Persistencia;
+
+public class ClientesPage extends JFrame {
 
 	/**
 	 * 
@@ -36,10 +32,9 @@ public class CanchasPage extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNombre;
-	private JSlider sliderJugadores;
 	private JLabel lblValue;
 	private JLabel lblPrecio;
-	private JTextField txtPrecio;
+	private JTextField txtTelefono;
 	private JButton btnGuardar;
 	private JButton btnCancelar;
 	private JPanel panel_1;
@@ -52,7 +47,7 @@ public class CanchasPage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CanchasPage frame = new CanchasPage();
+					ClientesPage frame = new ClientesPage();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,8 +59,8 @@ public class CanchasPage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CanchasPage() {
-		setTitle("Cancha");
+	public ClientesPage() {
+		setTitle("Cliente");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 469, 272);
@@ -78,7 +73,7 @@ public class CanchasPage extends JFrame {
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				changeTitle(String.format("Cancha %s", txtNombre.getText()));
+				changeTitle(String.format("Cliente %s", txtNombre.getText()));
 			}
 		});
 		txtNombre.setBounds(102, 71, 306, 20);
@@ -95,32 +90,15 @@ public class CanchasPage extends JFrame {
 		lblNombre.setBounds(35, 74, 46, 14);
 		contentPane.add(lblNombre);
 
-		JLabel lblCantidadMaximaDe = new JLabel("Cantidad maxima de jugadores");
-		lblCantidadMaximaDe.setBounds(35, 103, 176, 20);
-		contentPane.add(lblCantidadMaximaDe);
-
-		sliderJugadores = new JSlider();
-		sliderJugadores.setMinimum(2);
-		sliderJugadores.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				lblValue.setText(String.valueOf(sliderJugadores.getValue()));
-			}
-		});
-		sliderJugadores.setValue(10);
-		sliderJugadores.setMaximum(22);
-		lblCantidadMaximaDe.setLabelFor(sliderJugadores);
-		sliderJugadores.setBounds(223, 102, 185, 26);
-		contentPane.add(sliderJugadores);
-
-		lblPrecio = new JLabel("Precio");
-		lblPrecio.setBounds(35, 135, 46, 14);
+		lblPrecio = new JLabel("Telefono");
+		lblPrecio.setBounds(35, 103, 46, 14);
 		contentPane.add(lblPrecio);
 
-		txtPrecio = new JTextField();
-		txtPrecio.setColumns(10);
-		txtPrecio.setBounds(102, 134, 86, 20);
-		txtPrecio.setTransferHandler(null);
-		txtPrecio.addKeyListener(new KeyAdapter() {
+		txtTelefono = new JTextField();
+		txtTelefono.setColumns(10);
+		txtTelefono.setBounds(102, 102, 160, 20);
+		txtTelefono.setTransferHandler(null);
+		txtTelefono.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
 				if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)))) {
@@ -130,7 +108,7 @@ public class CanchasPage extends JFrame {
 			}
 		});
 
-		contentPane.add(txtPrecio);
+		contentPane.add(txtTelefono);
 
 		btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
@@ -141,19 +119,17 @@ public class CanchasPage extends JFrame {
 					return;
 				}
 				
-				//creamos el nuevo objeto cancha y lo guardamos aca
-				Cancha nuevaCancha = new Cancha();
-				nuevaCancha.setNombre(txtNombre.getText());
-				nuevaCancha.setCantMaxima(sliderJugadores.getValue());
-				nuevaCancha.setPrecio(Double.valueOf(txtPrecio.getText()));
+				Cliente nuevoCliente = new Cliente();
+				nuevoCliente.setNombre(txtNombre.getText());
+				nuevoCliente.setTelefono(Integer.valueOf(txtTelefono.getText()));
 				
 				try {
-					Persistencia.getInstance().insert(nuevaCancha);
+					Persistencia.getInstance().insert(nuevoCliente);
 					cleanForm();
-					setStatus("Cancha guardada correctamente");
+					setStatus("Cliente guardado correctamente");
 				} catch (SQLException e1) {
 					//Error cuando se guarda
-					setStatus("Se produjo un error intentando guardar la cancha.");
+					setStatus("Se produjo un error intentando guardar el cliente.");
 					e1.printStackTrace();
 				}
 				
@@ -200,9 +176,8 @@ public class CanchasPage extends JFrame {
 
 	protected void cleanForm() {
 		txtNombre.setText("");
-		txtPrecio.setText("");
-		sliderJugadores.setValue(10);
-		this.setTitle("Cancha");
+		txtTelefono.setText("");
+		this.setTitle("Cliente");
 	}
 
 	protected boolean validData() {
@@ -211,7 +186,7 @@ public class CanchasPage extends JFrame {
 		if (txtNombre.getText().isEmpty())
 			resul = false;
 		
-		if (txtPrecio.getText().isEmpty())
+		if (txtTelefono.getText().isEmpty())
 			resul = false;
 		
 		return resul;
