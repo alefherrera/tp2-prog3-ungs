@@ -31,6 +31,12 @@ public class Persistencia {
 		closeDb();
 	}
 	
+	public <T> void dropTable(Class<T> c) throws SQLException {
+		OpenDb();
+		TableUtils.dropTable(connectionSource, c, true);		
+		closeDb();
+	}
+	
 	public <T> void insert(T obj) throws SQLException {
 		OpenDb();
 

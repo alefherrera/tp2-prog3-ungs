@@ -15,48 +15,66 @@ public class Reserva {
 	@DatabaseField
 	private int cantHoras;
 	@DatabaseField
-	private int idCliente;	
-	private Cliente cliente;
+	private int idCliente;
+
 	@DatabaseField
 	private int idCancha;
-	private Cancha cancha;
 	@DatabaseField
 	private ReservaEstado estado;
+
+	public Reserva() {
+
+	}
+
+	public Reserva(Date fecha) {
+		super();
+		this.fecha = fecha;
+	}
+
 	public Date getFecha() {
 		return fecha;
 	}
+
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
+
 	public double getPago() {
 		return pago;
 	}
+
 	public void setPago(double pago) {
 		this.pago = pago;
 	}
+
 	public int getCantHoras() {
 		return cantHoras;
 	}
+
 	public void setCantHoras(int cantHoras) {
 		this.cantHoras = cantHoras;
 	}
-	public Cliente getCliente() {
-		return cliente;
+
+	public int getIdCliente() {
+		return idCliente;
 	}
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-		this.idCliente = cliente.getId();
+
+	public void setIdCliente(int idCliente) {
+		this.idCliente = idCliente;
 	}
-	public Cancha getCancha() {
-		return cancha;
+
+	public int getIdCancha() {
+		return idCancha;
 	}
-	public void setCancha(Cancha cancha) {
-		this.cancha = cancha;
-		this.idCancha = cancha.getId();
+
+	public void setIdCancha(int idCancha) {
+		this.idCancha = idCancha;
 	}
+
 	public ReservaEstado getEstado() {
 		return estado;
 	}
+
 	public void setEstado(ReservaEstado estado) {
 		this.estado = estado;
 	}

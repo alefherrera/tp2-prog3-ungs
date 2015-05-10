@@ -1,5 +1,7 @@
 package com.turnos.service.bean;
 
+import java.util.Arrays;
+
 import com.turnos.models.domain.Cancha;
 
 public class CanchaBean {
@@ -17,6 +19,16 @@ public class CanchaBean {
 
 	public Cancha getCancha() {
 		return cancha;
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		String ret = cancha.getNombre() + " -> ";
+		for (int i = 0; i < horarios.length; i++) {
+			ret += horarios[i] ? "" : " " + i;
+		}		
+		return  ret;
 	}
 
 }
