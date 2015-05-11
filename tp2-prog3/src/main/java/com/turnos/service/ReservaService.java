@@ -2,7 +2,7 @@ package com.turnos.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
@@ -14,6 +14,7 @@ import com.turnos.models.domain.Cliente;
 import com.turnos.models.domain.Reserva;
 import com.turnos.persistencia.Persistencia;
 import com.turnos.service.bean.CanchaBean;
+import com.turnos.service.bean.ClienteBean;
 import com.turnos.service.bean.HorarioAlternativo;
 
 public class ReservaService {
@@ -21,6 +22,7 @@ public class ReservaService {
 	private static ReservaService _instance = null;
 	private List<Cancha> canchas;
 	private List<Reserva> reservas;
+	private List<Cliente> clientes;
 
 	private ReservaService() throws SQLException {
 		canchas = Persistencia.getInstance().getAll(Cancha.class);
@@ -29,7 +31,9 @@ public class ReservaService {
 		reservas = Persistencia.getInstance().getAll(Reserva.class);
 		if (reservas == null)
 			reservas = new ArrayList<Reserva>();
-
+		clientes = Persistencia.getInstance().getAll(Cliente.class);
+		if (clientes == null)
+			clientes = new ArrayList<Cliente>();
 	}
 
 	public static ReservaService getInstance() throws SQLException {
@@ -150,5 +154,31 @@ public class ReservaService {
 		Persistencia.getInstance().insert(reserva);
 		reservas.add(reserva);
 	}
+	
+	public List<ClienteBean> clientesNoCumplidores(){
+		List<Reserva> reservasAusentes = new ArrayList<Reserva>();
+		reservasAusentes = reservas.stream().filter(x -> x.getEstado() == ReservaEstado.AUSENTE)
+				.collect(Collectors.toList());
+		
+		List<ClienteBean> aus = new ArrayList<ClienteBean>();
+
+		for (Cliente cliente : clientes) {
+		
+			int cantAus = reservasAusentes.stream()
+					.filter(x -> x.getIdCliente() == cliente.getId())
+					.collect(Collectors.toList()).size();
+
+			aus.add(new ClienteBean(cliente, cantAus));
+		}
+		
+		
+		Comparator<ClienteBean> CantAusente = (e1, e2) -> Integer.compare(
+	            e1.getAusente(), e2.getAusente());
+
+		aus = aus.stream().sorted(CantAusente).collect(Collectors.toList());
+	           
+		return aus;
+	}
+	
 
 }
