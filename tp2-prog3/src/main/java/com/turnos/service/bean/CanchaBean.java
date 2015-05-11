@@ -24,11 +24,12 @@ public class CanchaBean {
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		String ret = cancha.getNombre() + " -> ";
+		StringBuilder sb = new StringBuilder();
+		sb.append(cancha.getNombre() + " -> ");
 		for (int i = 0; i < horarios.length; i++) {
-			ret += horarios[i] ? "" : " " + i;
+			sb.append(horarios[i] ? "" : " " + i);
 		}		
-		return  ret;
+		return  sb.toString();
 	}
 
 }

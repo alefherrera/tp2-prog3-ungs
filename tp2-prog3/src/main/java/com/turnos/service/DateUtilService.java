@@ -20,8 +20,8 @@ public class DateUtilService {
 		return getZeroTimeDate(first).compareTo(getZeroTimeDate(second)) == 0;
 	}
 	
-	private Date getZeroTimeDate(Date fecha) {
-	    Date res = fecha;
+	public Date getZeroTimeDate(Date fecha) {
+	  
 	    Calendar calendar = Calendar.getInstance();
 
 	    calendar.setTime( fecha );
@@ -30,9 +30,28 @@ public class DateUtilService {
 	    calendar.set(Calendar.SECOND, 0);
 	    calendar.set(Calendar.MILLISECOND, 0);
 
-	    res = calendar.getTime();
+	    return calendar.getTime();
 
-	    return res;
+	}
+	
+	public Date getWithHours(Date fecha){
+
+	    Calendar calendar = Calendar.getInstance();
+
+	    calendar.setTime( fecha );
+	    calendar.set(Calendar.MINUTE, 0);
+	    calendar.set(Calendar.SECOND, 0);
+	    calendar.set(Calendar.MILLISECOND, 0);
+
+	    return calendar.getTime();
+
+	}
+	
+	public Date changetHour(Date fecha, int h){
+		Calendar cal = Calendar.getInstance(); // creates calendar
+	    cal.setTime(fecha); // sets calendar time/date
+	    cal.add(Calendar.HOUR_OF_DAY, h); // adds one hour
+	    return cal.getTime();
 	}
 	
 }

@@ -13,8 +13,10 @@ import com.turnos.models.domain.Cancha;
 import com.turnos.models.domain.Cliente;
 import com.turnos.models.domain.Reserva;
 import com.turnos.persistencia.Persistencia;
+import com.turnos.service.DateUtilService;
 import com.turnos.service.ReservaService;
 import com.turnos.service.bean.CanchaBean;
+import com.turnos.service.bean.HorarioAlternativo;
 
 public class ReservaTest {
 
@@ -41,6 +43,12 @@ public class ReservaTest {
 		cancha.setPrecio(100);
 		service.insert(cancha);
 		
+		Cancha cancha2 = new Cancha();
+		cancha2.setCantMaxima(11);
+		cancha2.setNombre("cancha 2");
+		cancha2.setPrecio(100);
+		service.insert(cancha2);		
+		
 		//inserto cliente de prueba
 		cliente = new Cliente();
 		cliente.setNombre("pepe");
@@ -48,15 +56,19 @@ public class ReservaTest {
 		service.insert(cliente);
 		
 		//genero reservas para esa cancha y ese cliente
-		ReservaService.getInstance().reservar(getFecha(), cliente, cancha, 2, ReservaEstado.SEÑADO, 50);
+		//reservo las primeras 10 horas del dia
+		for (int i = 0; i < 24; i++) {
+			ReservaService.getInstance().reservar(getFecha(i), cliente, cancha, 1, ReservaEstado.SEÑADO, 50);
+			ReservaService.getInstance().reservar(getFecha(i), cliente, cancha2, 1, ReservaEstado.SEÑADO, 50);
+		}
 		
 	}
 
 
-	private Date getFecha() {
+	private Date getFecha(int hora) {
 		Calendar cal = Calendar.getInstance();
-		cal.set(2015, Calendar.MAY, 10, 10, 0, 0);
-		return cal.getTime();
+		cal.set(2015, Calendar.MAY, 10, hora, 0, 0);
+		return DateUtilService.getInstance().getWithHours(cal.getTime());
 	}
 	
 	
@@ -87,14 +99,15 @@ public class ReservaTest {
 	//• Permitir reservas de m´as de una hora, sin tener que hacer reservas consecutivas
 	@Test
 	public void ReservasConcecutivasTest() throws SQLException{
-		ReservaService.getInstance().reservar(getFecha(), cliente, cancha, 2, ReservaEstado.SEÑADO, 50);
+		ReservaService.getInstance().reservar(getFecha(10), cliente, cancha, 2, ReservaEstado.SEÑADO, 50);
 	}
 	
 	//• Sugerir horarios alternativos cuando un cliente solicite una reserva y no haya canchas
 	//disponibles en ese horario.
 	@Test
-	public void SugerirHorariosTest(){
-		
+	public void SugerirHorariosTest() throws SQLException{			
+		List<HorarioAlternativo> res = ReservaService.getInstance().horariosAlternativos( getFecha(9), cancha.getId());
+		System.out.println(res);
 	}
 	
 	

@@ -11,7 +11,8 @@ public class Cliente  {
 	private String nombre;
 	@DatabaseField
 	private int telefono;
-	private String[] imagenes;
+	@DatabaseField
+	private String imagen;
 	public int getId() {
 		return id;
 	}
@@ -30,11 +31,11 @@ public class Cliente  {
 	public void setTelefono(int telefono) {
 		this.telefono = telefono;
 	}
-	public String[] getImagenes() {
-		return imagenes;
+	public String getImagen() {
+		return imagen;
 	}
-	public void setImagenes(String[] imagenes) {
-		this.imagenes = imagenes;
+	public void setImagen(String imagen) {
+		this.imagen = imagen;
 	}
 	@Override
 	public String toString() {
