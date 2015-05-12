@@ -1,15 +1,20 @@
 package com.turnos.ui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.awt.Toolkit;
 
 public class MainPage {
 
-	private JFrame frame;
+	private JFrame frmWaltercancha;
 
 	/**
 	 * Launch the application.
@@ -19,7 +24,7 @@ public class MainPage {
 			public void run() {
 				try {
 					MainPage window = new MainPage();
-					window.frame.setVisible(true);
+					window.frmWaltercancha.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -38,11 +43,14 @@ public class MainPage {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 550, 399);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmWaltercancha = new JFrame();
+		frmWaltercancha.setIconImage(Toolkit.getDefaultToolkit().getImage(MainPage.class.getResource("/com/turnos/resources/icono.JPG")));
+		frmWaltercancha.setTitle("WalterCancha");
+		frmWaltercancha.setResizable(false);
+		frmWaltercancha.setBounds(100, 100, 550, 399);
+		frmWaltercancha.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmWaltercancha.getContentPane().setLayout(null);
+		
 		
 		JButton btnAbmCanchas = new JButton("ABM Canchas");
 		btnAbmCanchas.addActionListener(new ActionListener() {
@@ -50,12 +58,12 @@ public class MainPage {
 				new CanchasPage().setVisible(true);
 			}
 		});
-		btnAbmCanchas.setBounds(10, 118, 121, 41);
-		frame.getContentPane().add(btnAbmCanchas);
+		btnAbmCanchas.setBounds(26, 51, 154, 101);
+		frmWaltercancha.getContentPane().add(btnAbmCanchas);
 		
 		JButton btnReservar = new JButton("Reservar");
-		btnReservar.setBounds(141, 118, 121, 41);
-		frame.getContentPane().add(btnReservar);
+		btnReservar.setBounds(190, 52, 154, 98);
+		frmWaltercancha.getContentPane().add(btnReservar);
 		
 		JButton btnAbmClientes = new JButton("ABM Clientes");
 		btnAbmClientes.addActionListener(new ActionListener() {
@@ -63,7 +71,21 @@ public class MainPage {
 				new ClientesPage().setVisible(true);
 			}
 		});
-		btnAbmClientes.setBounds(273, 118, 121, 41);
-		frame.getContentPane().add(btnAbmClientes);
+		btnAbmClientes.setBounds(360, 54, 154, 94);
+		frmWaltercancha.getContentPane().add(btnAbmClientes);
+		
+
+		JPanel panel;
+		try {
+			panel = new JImagePanel("resources/fondo.jpg");
+			//panel.setBackground(new Color(176, 196, 222));
+			panel.setBounds(0, 0, 544, 370);
+			frmWaltercancha.getContentPane().add(panel);
+
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 	}
 }
