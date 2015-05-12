@@ -96,7 +96,7 @@ public class ReservaService {
 				Date aux = dateService.changeHour(fecha, i * -1);
 				// dejo de buscar para atras cuando el horario es menor al
 				// actual
-				if (aux.compareTo(dateService.now()) != -1)
+				if (i != 0 && aux.compareTo(dateService.now()) != -1)
 					// verifico si puede relizar la reserva
 					ret = IntentarAgregar(aux, cancha.getId(), ret);
 			}
