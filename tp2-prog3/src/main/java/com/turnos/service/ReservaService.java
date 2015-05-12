@@ -2,6 +2,7 @@ package com.turnos.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -76,70 +77,55 @@ public class ReservaService {
 
 	public List<HorarioAlternativo> horariosAlternativos(Date fecha,
 			int idCancha) throws SQLException {
-		Persistencia serv = Persistencia.getInstance();
+		// Persistencia serv = Persistencia.getInstance();
 		DateUtilService dateService = DateUtilService.getInstance();
-		Reserva filtro = new Reserva();
-		filtro.setIdCancha(idCancha);
-		filtro.setFecha(fecha);
 		List<HorarioAlternativo> ret = new ArrayList<HorarioAlternativo>();
 		// verifico si puedo realizar la reserva
-		if (getOcupados(filtro).isEmpty()) {
-			ret.add(horarioDesdeFiltro(filtro));
+		if (getOcupados(fecha, idCancha).isEmpty()) {
+			ret.add(new HorarioAlternativo(idCancha, fecha));
 			return ret;
-		} else {
-			// pruebo con cada cancha en el mismo horario
-			for (Cancha cancha : canchas) {
-				filtro.setIdCancha(cancha.getId());
-				ret = llenarResultado(filtro, ret);
-			}
-			if (ret.size() > 0)
-				return ret;
 		}
 		// busco hasta tener al menos 10 horarios alternativos
-		int i = 1;
+		int i = 0;
 		while (ret.size() < 10) {
 			for (Cancha cancha : canchas) {
-				filtro.setIdCancha(cancha.getId());
-				filtro.setFecha(dateService.changetHour(fecha, i * -1));
 				// verifico si puede relizar la reserva
-				ret = llenarResultado(filtro, ret);
+				ret = IntentarAgregar(dateService.changeHour(fecha, i),
+						cancha.getId(), ret);
 				// intento una hora despues de la incial
-				filtro.setFecha(dateService.changetHour(fecha, i));
-				// verifico si puede relizar la reserva
-				ret = llenarResultado(filtro, ret);
+				Date aux = dateService.changeHour(fecha, i * -1);
+				// dejo de buscar para atras cuando el horario es menor al
+				// actual
+				if (aux.compareTo(dateService.now()) != -1)
+					// verifico si puede relizar la reserva
+					ret = IntentarAgregar(aux, cancha.getId(), ret);
 			}
 			i++;
 		}
 		return ret;
 	}
 
-	private List<HorarioAlternativo> llenarResultado(Reserva filtro,
+	private List<HorarioAlternativo> IntentarAgregar(Date fecha, int idCancha,
 			List<HorarioAlternativo> ret) throws SQLException {
-		if (getOcupados(filtro).isEmpty()) {
-			ret.add(horarioDesdeFiltro(filtro));
+		if (getOcupados(fecha, idCancha).isEmpty()) {
+			ret.add(new HorarioAlternativo(idCancha, fecha));
 		}
 		return ret;
 	}
 
-	private HorarioAlternativo horarioDesdeFiltro(Reserva filtro) {
-		return new HorarioAlternativo(filtro.getIdCancha(), filtro.getFecha());
-	}
+	private List<Reserva> getOcupados(Date fecha, int idCancha)
+			throws SQLException {
 
-	// TODO: falta contemplar si existe alguna reserva anterior donde se
-	// reservaron horas consecutivas
-	private List<Reserva> getOcupados(Reserva filtro) throws SQLException {
-		return Persistencia.getInstance().getWhere(filtro);
-	}
+		List<Reserva> ret = new ArrayList<Reserva>();
+		for (Reserva reserva : reservas) {
+			if (reserva.getIdCancha() == idCancha
+					&& fecha.compareTo(reserva.getFecha()) > -1
+					&& fecha.compareTo(reserva.getFechaFin()) < 0)
+				ret.add(reserva);
+		}
 
-	/*
-	 * // Recorre todas las canchas y por cada una de estas saca a las ocupadas
-	 * private List<HorarioAlternativo> obtenerAlternativos(Reserva filtro,
-	 * List<Reserva> aux) { List<Integer> ids =
-	 * aux.stream().map(Reserva::getIdCancha) .collect(Collectors.toList());
-	 * return canchas.stream().filter(x -> !ids.contains(x.getId())) .map(y ->
-	 * new HorarioAlternativo(y.getId(), filtro.getFecha()))
-	 * .collect(Collectors.toList()); }
-	 */
+		return ret;
+	}
 
 	public void reservar(Date dia, Cliente cliente, Cancha cancha,
 			int cantidadHoras, ReservaEstado estado, double pago)
@@ -154,31 +140,30 @@ public class ReservaService {
 		Persistencia.getInstance().insert(reserva);
 		reservas.add(reserva);
 	}
-	
-	public List<ClienteBean> clientesNoCumplidores(){
+
+	public List<ClienteBean> clientesNoCumplidores() {
 		List<Reserva> reservasAusentes = new ArrayList<Reserva>();
-		reservasAusentes = reservas.stream().filter(x -> x.getEstado() == ReservaEstado.AUSENTE)
+		reservasAusentes = reservas.stream()
+				.filter(x -> x.getEstado() == ReservaEstado.AUSENTE)
 				.collect(Collectors.toList());
-		
+
 		List<ClienteBean> aus = new ArrayList<ClienteBean>();
 
 		for (Cliente cliente : clientes) {
-		
+
 			int cantAus = reservasAusentes.stream()
 					.filter(x -> x.getIdCliente() == cliente.getId())
 					.collect(Collectors.toList()).size();
 
 			aus.add(new ClienteBean(cliente, cantAus));
 		}
-		
-		
+
 		Comparator<ClienteBean> CantAusente = (e1, e2) -> Integer.compare(
-	            e1.getAusente(), e2.getAusente());
+				e1.getAusente(), e2.getAusente());
 
 		aus = aus.stream().sorted(CantAusente).collect(Collectors.toList());
-	           
+
 		return aus;
 	}
-	
 
 }

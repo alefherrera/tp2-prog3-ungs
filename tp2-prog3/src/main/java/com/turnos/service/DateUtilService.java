@@ -47,11 +47,15 @@ public class DateUtilService {
 
 	}
 	
-	public Date changetHour(Date fecha, int h){
+	public Date changeHour(Date fecha, int h){
 		Calendar cal = Calendar.getInstance(); // creates calendar
 	    cal.setTime(fecha); // sets calendar time/date
 	    cal.add(Calendar.HOUR_OF_DAY, h); // adds one hour
 	    return cal.getTime();
+	}
+	
+	public Date now(){
+		return Calendar.getInstance().getTime();
 	}
 	
 }

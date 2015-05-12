@@ -5,6 +5,7 @@ import java.util.Date;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.turnos.enums.ReservaEstado;
+import com.turnos.service.DateUtilService;
 
 @DatabaseTable(tableName = "reserva")
 public class Reserva {
@@ -77,5 +78,8 @@ public class Reserva {
 
 	public void setEstado(ReservaEstado estado) {
 		this.estado = estado;
+	}
+	public Date getFechaFin(){
+		return DateUtilService.getInstance().changeHour(this.fecha, cantHoras);
 	}
 }
