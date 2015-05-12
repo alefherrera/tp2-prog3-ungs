@@ -9,10 +9,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileFilter;
 
 import com.turnos.models.domain.Cliente;
 import com.turnos.persistencia.Persistencia;
@@ -39,7 +42,9 @@ public class ClientesPage extends JFrame {
 	private JButton btnCancelar;
 	private JPanel panel_1;
 	private JLabel lblStatusMamis;
+	private JButton btnSubirImagen;
 
+	final JFileChooser fc = new JFileChooser();
 	/**
 	 * Launch the application.
 	 */
@@ -163,6 +168,62 @@ public class ClientesPage extends JFrame {
 			
 			lblStatusMamis = new JLabel("");
 			panel_1.add(lblStatusMamis);
+			
+			btnSubirImagen = new JButton("Subir Imagen");
+			btnSubirImagen.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				
+					fc.addChoosableFileFilter(new FileFilter() {
+						
+						private String getExtension(File f) {
+					        String ext = null;
+					        String s = f.getName();
+					        int i = s.lastIndexOf('.');
+
+					        if (i > 0 &&  i < s.length() - 1) {
+					            ext = s.substring(i+1).toLowerCase();
+					        }
+					        return ext;
+					    }
+						
+						@Override
+						public String getDescription() {
+							return "Imagenes";
+						}
+						
+						@Override
+						public boolean accept(File f) {
+							/*if (f.isDirectory()) {
+						        return false;
+						    }*/
+
+						    String extension = getExtension(f);
+						    if (extension != null) {
+						        if (extension.equals("jpeg") || extension.equals("jpg")) {
+						                return true;
+						        } else {
+						            return false;
+						        }
+						    }
+
+						    return false;
+						}
+					});
+					int returnVal = fc.showOpenDialog(ClientesPage.this);
+
+			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+			        	//TODO: guardar el archivo y guardar string en bd
+			            File file = fc.getSelectedFile();
+			            //This is where a real application would open the file.
+			           // log.append("Opening: " + file.getName() + "." + newline);
+			        } else {
+			           // log.append("Open command cancelled by user." + newline);
+			        }
+				}
+			});
+			btnSubirImagen.setBounds(35, 145, 95, 23);
+			contentPane.add(btnSubirImagen);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
