@@ -46,4 +46,13 @@ public class Cancha {
 		this.cantMaxima = cantMaxima;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(nombre);
+		return builder.toString();
+	}
+
+	
+	
 }
