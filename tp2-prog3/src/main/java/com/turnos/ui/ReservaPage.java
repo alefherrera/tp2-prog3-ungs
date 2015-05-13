@@ -2,6 +2,7 @@ package com.turnos.ui;
 
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -14,12 +15,16 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -31,18 +36,13 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import com.turnos.enums.ReservaEstado;
+import com.turnos.models.domain.Cancha;
 import com.turnos.models.domain.Cliente;
 import com.turnos.models.domain.Reserva;
 import com.turnos.persistencia.Persistencia;
 import com.turnos.service.ReservaService;
 import com.turnos.service.bean.CanchaBean;
-
-import javax.swing.JTextField;
-
-import java.awt.Font;
-
-import javax.swing.SwingConstants;
-import javax.swing.JSlider;
+import com.turnos.service.bean.HorarioAlternativo;
 
 public class ReservaPage extends JFrame {
 
@@ -142,10 +142,10 @@ public class ReservaPage extends JFrame {
 	private JDatePickerImpl datePicker;
 	private JLabel lblCliente;
 	private ComboBoxModel<Cliente> cmbModelCliente;
-	private GenericModel<CanchaBean> cmbCanchaModel;
+	private GenericModel<Cancha> cmbCanchaModel;
 	private JLabel lblStatus;
 	private JComboBox<Cliente> cmbClientes;
-	private JComboBox<CanchaBean> cmbCanchas;
+	private JComboBox<Cancha> cmbCanchas;
 	private JComboBox<String> cmbHorarios;
 	private JButton btnCancelar;
 	private JButton btnReservar;
@@ -183,7 +183,7 @@ public class ReservaPage extends JFrame {
 		contentPane.setLayout(null);
 
 		cmbClientes = new JComboBox<Cliente>();
-		cmbCanchas = new JComboBox<CanchaBean>();
+		cmbCanchas = new JComboBox<Cancha>();
 		cmbHorarios = new JComboBox<String>();
 		lblStatus = new JLabel("");
 
@@ -198,28 +198,12 @@ public class ReservaPage extends JFrame {
 		springLayout.putConstraint(SpringLayout.SOUTH,
 				datePicker.getJFormattedTextField(), 0, SpringLayout.SOUTH,
 				datePicker);
-
-		datePicker.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					// Aca tengo una lista de canchas
-					cmbCanchas.setModel(new GenericModel<CanchaBean>(
-							ReservaService.getInstance().consultarDisponibles(
-									(Date) datePicker.getModel().getValue())));
-				} catch (SQLException e1) {
-
-					e1.printStackTrace();
-				}
-			}
-		});
 		datePicker.setBounds(134, 27, 202, 29);
 		contentPane.add(datePicker);
 
 		ArrayList<Cliente> clientes = null;
 		try {
-			clientes = (ArrayList<Cliente>) Persistencia.getInstance().getAll(
-					Cliente.class);
+			clientes = (ArrayList<Cliente>) Persistencia.getInstance().getAll(Cliente.class);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -231,31 +215,21 @@ public class ReservaPage extends JFrame {
 		cmbClientes.setBounds(134, 169, 202, 23);
 		contentPane.add(cmbClientes);
 
-		cmbCanchaModel = new GenericModel<CanchaBean>(null);
+		ArrayList<Cancha> canchas = null;
+		try {
+			canchas = (ArrayList<Cancha>) Persistencia.getInstance().getAll(Cancha.class);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cmbCanchaModel = new GenericModel<Cancha>(canchas);
 		cmbCanchas.setModel(cmbCanchaModel);
+		cmbCanchas.setSelectedIndex(0);
 		cmbCanchas.setBounds(134, 101, 202, 23);
-		cmbCanchas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ArrayList<String> horariosDeLaCancha = new ArrayList<String>();
-
-				// Viene todo en False
-//				CanchaBean canchaSel = (CanchaBean) cmbCanchas.getModel()
-//						.getSelectedItem();
-//				boolean[] horarios = canchaSel.getHorarios();
-//				for (int i = 0; i < horarios.length; i++) {
-//					// Si no esta reservada, la proponemos
-//					if (!horarios[i])
-//						horariosDeLaCancha.add(i + "hs.");
-//				}
-
-				cmbHorarios.setModel(new GenericModel<String>(
-						horariosDeLaCancha));
-			}
-		});
-
 		contentPane.add(cmbCanchas);
 
-		cmbHorarios.setModel(new GenericModel<String>(null));
+		cmbHorarios.setModel(new DefaultComboBoxModel<String>(new String[] {"0hs", "1hs", "2hs", "3hs", "4hs", "5hs", "6hs", "7hs", "8hs", "9hs", "10hs", "11hs", "12hs", "13hs", "14hs", "15hs", "16hs", "17hs", "18hs", "19hs", "20hs", "21hs", "22hs", "23hs"}));
+		cmbHorarios.setSelectedIndex(0);
 		cmbHorarios.setBounds(134, 135, 100, 23);
 		contentPane.add(cmbHorarios);
 
@@ -288,7 +262,12 @@ public class ReservaPage extends JFrame {
 		btnReservar = new JButton("Reservar!");
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
+				if (cmbClientes.getSelectedIndex() == 0)
+				{
+					
+				}
+				
 				if (!validForm())
 					return;
 
@@ -331,6 +310,7 @@ public class ReservaPage extends JFrame {
 		contentPane.add(btnCancelar);
 
 		txtSena = new JTextField();
+		txtSena.setText("0");
 		txtSena.setColumns(10);
 		txtSena.setBounds(134, 203, 86, 23);
 		txtSena.addKeyListener(new KeyAdapter() {
@@ -384,4 +364,8 @@ public class ReservaPage extends JFrame {
 
 		return true;
 	}
+	
+	//List<HorarioAlternativo> listaDeHorarios = 
+	//ReservaService.getInstance().horariosAlternativos(fechaSolicitada, ((CanchaBean)cmbCanchas.getSelectedItem()).getCancha().getId());
+	
 }

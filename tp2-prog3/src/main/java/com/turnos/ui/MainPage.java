@@ -60,6 +60,11 @@ public class MainPage {
 		frmWaltercancha.getContentPane().add(btnAbmCanchas);
 		
 		JButton btnReservar = new JButton("Reservar");
+		btnReservar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ReservaPage().setVisible(true);
+			}
+		});
 		btnReservar.setBounds(190, 52, 154, 98);
 		frmWaltercancha.getContentPane().add(btnReservar);
 		
