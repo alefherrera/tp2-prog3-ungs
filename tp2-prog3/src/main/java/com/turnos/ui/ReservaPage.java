@@ -41,8 +41,6 @@ import com.turnos.models.domain.Cliente;
 import com.turnos.models.domain.Reserva;
 import com.turnos.persistencia.Persistencia;
 import com.turnos.service.ReservaService;
-import com.turnos.service.bean.CanchaBean;
-import com.turnos.service.bean.HorarioAlternativo;
 
 public class ReservaPage extends JFrame {
 
@@ -152,6 +150,9 @@ public class ReservaPage extends JFrame {
 	private JTextField txtSena;
 	private JSlider sliderHoras;
 	private JLabel lblCantidadHoras;
+	private JTextField txtNombre;
+	private JTextField txtNumeroTel;
+	private JPanel pnlNuevoCliente;
 
 	/**
 	 * Launch the application.
@@ -203,7 +204,8 @@ public class ReservaPage extends JFrame {
 
 		ArrayList<Cliente> clientes = null;
 		try {
-			clientes = (ArrayList<Cliente>) Persistencia.getInstance().getAll(Cliente.class);
+			clientes = (ArrayList<Cliente>) Persistencia.getInstance().getAll(
+					Cliente.class);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -212,12 +214,21 @@ public class ReservaPage extends JFrame {
 
 		cmbClientes.setModel(cmbModelCliente);
 		cmbClientes.setSelectedIndex(0);
-		cmbClientes.setBounds(134, 169, 202, 23);
+		cmbClientes.setBounds(134, 136, 202, 23);
+		cmbClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (cmbClientes.getSelectedIndex() == 0)
+					pnlNuevoCliente.setVisible(true);
+				else
+					pnlNuevoCliente.setVisible(false);
+			}
+		});
 		contentPane.add(cmbClientes);
 
 		ArrayList<Cancha> canchas = null;
 		try {
-			canchas = (ArrayList<Cancha>) Persistencia.getInstance().getAll(Cancha.class);
+			canchas = (ArrayList<Cancha>) Persistencia.getInstance().getAll(
+					Cancha.class);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -225,16 +236,19 @@ public class ReservaPage extends JFrame {
 		cmbCanchaModel = new GenericModel<Cancha>(canchas);
 		cmbCanchas.setModel(cmbCanchaModel);
 		cmbCanchas.setSelectedIndex(0);
-		cmbCanchas.setBounds(134, 101, 202, 23);
+		cmbCanchas.setBounds(134, 68, 202, 23);
 		contentPane.add(cmbCanchas);
 
-		cmbHorarios.setModel(new DefaultComboBoxModel<String>(new String[] {"0hs", "1hs", "2hs", "3hs", "4hs", "5hs", "6hs", "7hs", "8hs", "9hs", "10hs", "11hs", "12hs", "13hs", "14hs", "15hs", "16hs", "17hs", "18hs", "19hs", "20hs", "21hs", "22hs", "23hs"}));
+		cmbHorarios.setModel(new DefaultComboBoxModel<String>(new String[] {
+				"0hs", "1hs", "2hs", "3hs", "4hs", "5hs", "6hs", "7hs", "8hs",
+				"9hs", "10hs", "11hs", "12hs", "13hs", "14hs", "15hs", "16hs",
+				"17hs", "18hs", "19hs", "20hs", "21hs", "22hs", "23hs" }));
 		cmbHorarios.setSelectedIndex(0);
-		cmbHorarios.setBounds(134, 135, 100, 23);
+		cmbHorarios.setBounds(134, 102, 100, 23);
 		contentPane.add(cmbHorarios);
 
 		lblCliente = new JLabel("Cliente");
-		lblCliente.setBounds(16, 169, 108, 23);
+		lblCliente.setBounds(16, 136, 108, 23);
 		contentPane.add(lblCliente);
 
 		JLabel lblFechaDeLa = new JLabel("Fecha de la reserva");
@@ -243,11 +257,11 @@ public class ReservaPage extends JFrame {
 		contentPane.add(lblFechaDeLa);
 
 		JLabel lblCanchas = new JLabel("Canchas");
-		lblCanchas.setBounds(16, 101, 108, 23);
+		lblCanchas.setBounds(16, 68, 108, 23);
 		contentPane.add(lblCanchas);
 
 		JLabel lblHorarios = new JLabel("Horarios");
-		lblHorarios.setBounds(16, 135, 108, 23);
+		lblHorarios.setBounds(16, 102, 108, 23);
 		contentPane.add(lblHorarios);
 
 		JPanel panel = new JPanel();
@@ -262,19 +276,47 @@ public class ReservaPage extends JFrame {
 		btnReservar = new JButton("Reservar!");
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				if (cmbClientes.getSelectedIndex() == 0)
-				{
-					
+
+				if (cmbClientes.getSelectedIndex() == 0) {
+					// Validacion para el cliente nuevo
+					if (txtNombre.getText().isEmpty()) {
+						updateMessage("Ingrese al menos un nombre al cliente...");
+						return;
+					}
+
+					Cliente nuevoCliente = new Cliente();
+					nuevoCliente.setNombre(txtNombre.getText());
+					nuevoCliente.setTelefono(Integer.valueOf(txtNumeroTel
+							.getText()));
+
+					try {
+						Persistencia.getInstance().insert(nuevoCliente);
+
+						txtNombre.setText("");
+						txtNumeroTel.setText("");
+
+						updateMessage("Cliente guardado correctamente");
+
+						cmbModelCliente = new ClienteModel(Persistencia
+								.getInstance().getAll(Cliente.class));
+						cmbClientes.setModel(cmbModelCliente);
+						cmbClientes.setSelectedIndex(cmbClientes.getItemCount() - 1);
+
+					} catch (SQLException e1) {
+						// Error cuando se guarda
+						updateMessage("Se produjo un error intentando guardar el cliente.");
+						e1.printStackTrace();
+						return;
+					}
 				}
-				
+
 				if (!validForm())
 					return;
 
 				Reserva nuevaReserva = new Reserva();
 				nuevaReserva.setFecha((Date) datePicker.getModel().getValue());
-				nuevaReserva.setIdCancha(((CanchaBean) cmbCanchas.getModel()
-						.getSelectedItem()).getCancha().getId());
+				nuevaReserva.setIdCancha(((Cancha) cmbCanchas.getModel()
+						.getSelectedItem()).getId());
 				nuevaReserva.setIdCliente(((Cliente) cmbClientes.getModel()
 						.getSelectedItem()).getId());
 				nuevaReserva.setCantHoras(sliderHoras.getValue());
@@ -289,6 +331,7 @@ public class ReservaPage extends JFrame {
 
 				try {
 					ReservaService.getInstance().reservar(nuevaReserva);
+					updateMessage("Reserva efectuada correctamente.");
 				} catch (SQLException e1) {
 					updateMessage("Ups! No se pudo guardar la reserva...");
 					e1.printStackTrace();
@@ -312,7 +355,7 @@ public class ReservaPage extends JFrame {
 		txtSena = new JTextField();
 		txtSena.setText("0");
 		txtSena.setColumns(10);
-		txtSena.setBounds(134, 203, 86, 23);
+		txtSena.setBounds(134, 170, 86, 23);
 		txtSena.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				char c = e.getKeyChar();
@@ -325,20 +368,20 @@ public class ReservaPage extends JFrame {
 		contentPane.add(txtSena);
 
 		JLabel lblSea = new JLabel("Seña");
-		lblSea.setBounds(16, 203, 108, 23);
+		lblSea.setBounds(16, 170, 108, 23);
 		contentPane.add(lblSea);
 
 		JLabel lblValue = new JLabel("1");
 		lblValue.setHorizontalAlignment(SwingConstants.CENTER);
 		lblValue.setFont(new Font("Tahoma", Font.BOLD, 14));
-		lblValue.setBounds(306, 237, 30, 26);
+		lblValue.setBounds(306, 204, 30, 26);
 		contentPane.add(lblValue);
 
 		sliderHoras = new JSlider();
 		sliderHoras.setValue(1);
 		sliderHoras.setMinimum(1);
 		sliderHoras.setMaximum(12);
-		sliderHoras.setBounds(134, 237, 162, 26);
+		sliderHoras.setBounds(134, 204, 162, 26);
 		sliderHoras.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				lblValue.setText(String.valueOf(sliderHoras.getValue()));
@@ -347,8 +390,40 @@ public class ReservaPage extends JFrame {
 		contentPane.add(sliderHoras);
 
 		lblCantidadHoras = new JLabel("Cantidad de horas");
-		lblCantidadHoras.setBounds(16, 237, 108, 26);
+		lblCantidadHoras.setBounds(16, 204, 108, 26);
 		contentPane.add(lblCantidadHoras);
+
+		pnlNuevoCliente = new JPanel();
+		pnlNuevoCliente.setBounds(16, 241, 320, 73);
+		contentPane.add(pnlNuevoCliente);
+		pnlNuevoCliente.setLayout(null);
+
+		JLabel label = new JLabel("Nombre");
+		label.setBounds(10, 11, 46, 20);
+		pnlNuevoCliente.add(label);
+
+		txtNombre = new JTextField();
+		txtNombre.setColumns(10);
+		txtNombre.setBounds(77, 11, 233, 20);
+		pnlNuevoCliente.add(txtNombre);
+
+		txtNumeroTel = new JTextField();
+		txtNumeroTel.setColumns(10);
+		txtNumeroTel.setBounds(77, 42, 160, 20);
+		txtNumeroTel.addKeyListener(new KeyAdapter() {
+			public void keyTyped(KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!((Character.isDigit(c) || (c == KeyEvent.VK_BACK_SPACE) || (c == KeyEvent.VK_DELETE)))) {
+					getToolkit().beep();
+					e.consume();
+				}
+			}
+		});
+		pnlNuevoCliente.add(txtNumeroTel);
+
+		JLabel label_1 = new JLabel("Telefono");
+		label_1.setBounds(10, 43, 46, 20);
+		pnlNuevoCliente.add(label_1);
 
 	}
 
@@ -364,8 +439,4 @@ public class ReservaPage extends JFrame {
 
 		return true;
 	}
-	
-	//List<HorarioAlternativo> listaDeHorarios = 
-	//ReservaService.getInstance().horariosAlternativos(fechaSolicitada, ((CanchaBean)cmbCanchas.getSelectedItem()).getCancha().getId());
-	
 }
