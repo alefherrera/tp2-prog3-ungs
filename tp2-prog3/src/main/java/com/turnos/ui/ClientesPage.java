@@ -45,6 +45,7 @@ public class ClientesPage extends JFrame {
 	private JButton btnSubirImagen;
 
 	final JFileChooser fc = new JFileChooser();
+
 	/**
 	 * Launch the application.
 	 */
@@ -92,11 +93,11 @@ public class ClientesPage extends JFrame {
 		contentPane.add(lblValue);
 
 		JLabel lblNombre = new JLabel("Nombre");
-		lblNombre.setBounds(35, 74, 46, 14);
+		lblNombre.setBounds(35, 71, 46, 20);
 		contentPane.add(lblNombre);
 
 		lblPrecio = new JLabel("Telefono");
-		lblPrecio.setBounds(35, 103, 46, 14);
+		lblPrecio.setBounds(35, 103, 46, 20);
 		contentPane.add(lblPrecio);
 
 		txtTelefono = new JTextField();
@@ -118,26 +119,26 @@ public class ClientesPage extends JFrame {
 		btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				if (!validData()){
+
+				if (!validData()) {
 					setStatus("Falta completar algun campo");
 					return;
 				}
-				
+
 				Cliente nuevoCliente = new Cliente();
 				nuevoCliente.setNombre(txtNombre.getText());
 				nuevoCliente.setTelefono(Integer.valueOf(txtTelefono.getText()));
-				
+
 				try {
 					Persistencia.getInstance().insert(nuevoCliente);
 					cleanForm();
 					setStatus("Cliente guardado correctamente");
 				} catch (SQLException e1) {
-					//Error cuando se guarda
+					// Error cuando se guarda
 					setStatus("Se produjo un error intentando guardar el cliente.");
 					e1.printStackTrace();
 				}
-				
+
 			}
 		});
 		btnGuardar.setBounds(357, 181, 89, 23);
@@ -158,68 +159,71 @@ public class ClientesPage extends JFrame {
 			panel.setBackground(new Color(176, 196, 222));
 			panel.setBounds(0, 0, 463, 53);
 			contentPane.add(panel);
-			
+
 			panel_1 = new JPanel();
-			panel_1.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
-							null));
+			panel_1.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null,
+					null, null));
 			panel_1.setBounds(0, 212, 463, 31);
 			contentPane.add(panel_1);
 			panel_1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-			
+
 			lblStatusMamis = new JLabel("");
 			panel_1.add(lblStatusMamis);
-			
+
 			btnSubirImagen = new JButton("Subir Imagen");
 			btnSubirImagen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				
-					fc.addChoosableFileFilter(new FileFilter() {
-						
-						private String getExtension(File f) {
-					        String ext = null;
-					        String s = f.getName();
-					        int i = s.lastIndexOf('.');
 
-					        if (i > 0 &&  i < s.length() - 1) {
-					            ext = s.substring(i+1).toLowerCase();
-					        }
-					        return ext;
-					    }
-						
+					fc.addChoosableFileFilter(new FileFilter() {
+
+						private String getExtension(File f) {
+							String ext = null;
+							String s = f.getName();
+							int i = s.lastIndexOf('.');
+
+							if (i > 0 && i < s.length() - 1) {
+								ext = s.substring(i + 1).toLowerCase();
+							}
+							return ext;
+						}
+
 						@Override
 						public String getDescription() {
 							return "Imagenes";
 						}
-						
+
 						@Override
 						public boolean accept(File f) {
-							/*if (f.isDirectory()) {
-						        return false;
-						    }*/
+							/*
+							 * if (f.isDirectory()) { return false; }
+							 */
 
-						    String extension = getExtension(f);
-						    if (extension != null) {
-						        if (extension.equals("jpeg") || extension.equals("jpg")) {
-						                return true;
-						        } else {
-						            return false;
-						        }
-						    }
+							String extension = getExtension(f);
+							if (extension != null) {
+								if (extension.equals("jpeg")
+										|| extension.equals("jpg")) {
+									return true;
+								} else {
+									return false;
+								}
+							}
 
-						    return false;
+							return false;
 						}
 					});
 					int returnVal = fc.showOpenDialog(ClientesPage.this);
 
-			        if (returnVal == JFileChooser.APPROVE_OPTION) {
-			        	//TODO: guardar el archivo y guardar string en bd
-			            File file = fc.getSelectedFile();
-			            //This is where a real application would open the file.
-			           // log.append("Opening: " + file.getName() + "." + newline);
-			        } else {
-			           // log.append("Open command cancelled by user." + newline);
-			        }
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						// TODO: guardar el archivo y guardar string en bd
+						File file = fc.getSelectedFile();
+						// This is where a real application would open the file.
+						// log.append("Opening: " + file.getName() + "." +
+						// newline);
+					} else {
+						// log.append("Open command cancelled by user." +
+						// newline);
+					}
 				}
 			});
 			btnSubirImagen.setBounds(35, 145, 95, 23);
@@ -243,24 +247,22 @@ public class ClientesPage extends JFrame {
 
 	protected boolean validData() {
 		boolean resul = true;
-		
+
 		if (txtNombre.getText().isEmpty())
 			resul = false;
-		
+
 		if (txtTelefono.getText().isEmpty())
 			resul = false;
-		
+
 		return resul;
 	}
 
 	protected void closeFrame() {
 		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
-	
-	protected void changeTitle(String title){
+
+	protected void changeTitle(String title) {
 		this.setTitle(title);
 	}
-	
-	
-	
+
 }
