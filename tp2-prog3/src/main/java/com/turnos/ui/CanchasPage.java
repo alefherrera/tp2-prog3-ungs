@@ -88,7 +88,7 @@ public class CanchasPage extends JFrame {
 		lblValue = new JLabel("");
 		lblValue.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lblValue.setHorizontalAlignment(SwingConstants.CENTER);
-		lblValue.setBounds(416, 97, 30, 26);
+		lblValue.setBounds(416, 102, 30, 26);
 		contentPane.add(lblValue);
 
 		JLabel lblNombre = new JLabel("Nombre");

@@ -1,16 +1,14 @@
 package com.turnos.ui;
 
-import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class MainPage {
 
@@ -77,6 +75,15 @@ public class MainPage {
 
 		JPanel panel;
 		try {
+			
+			JButton btnListadoDeReservas = new JButton("Listado de Reservas");
+			btnListadoDeReservas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					new ListadoReservasPage().setVisible(true);
+				}
+			});
+			btnListadoDeReservas.setBounds(190, 160, 154, 98);
+			frmWaltercancha.getContentPane().add(btnListadoDeReservas);
 			panel = new JImagePanel("resources/fondo.jpg");
 			//panel.setBackground(new Color(176, 196, 222));
 			panel.setBounds(0, 0, 544, 370);

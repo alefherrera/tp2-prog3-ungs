@@ -2,11 +2,11 @@ package com.turnos.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.turnos.enums.ReservaEstado;
@@ -74,6 +74,14 @@ public class ReservaService {
 		DateUtilService serv = DateUtilService.getInstance();
 		return filtrar(dia, x -> serv.compareOnlyDate(x.getFecha(), dia));
 	}
+	
+	public List<Reserva> getReservas(){
+		return reservas;
+	}
+	
+	public List<Reserva> getReservasBy(Predicate<Reserva> condicion){
+		return reservas.stream().filter(condicion).collect(Collectors.toList());
+	}
 
 	public List<HorarioAlternativo> horariosAlternativos(Date fecha,
 			int idCancha) throws SQLException {
@@ -127,6 +135,8 @@ public class ReservaService {
 		return ret;
 	}
 
+
+
 	public void reservar(Date dia, Cliente cliente, Cancha cancha,
 			int cantidadHoras, ReservaEstado estado, double pago)
 			throws SQLException {
@@ -137,6 +147,10 @@ public class ReservaService {
 		reserva.setIdCancha(cancha.getId());
 		reserva.setEstado(estado);
 		reserva.setPago(pago);
+		reservar(reserva);
+	}
+
+	public void reservar(Reserva reserva) throws SQLException {
 		Persistencia.getInstance().insert(reserva);
 		reservas.add(reserva);
 	}
