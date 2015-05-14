@@ -1,5 +1,6 @@
 package com.turnos.models.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -79,7 +80,56 @@ public class Reserva {
 	public void setEstado(ReservaEstado estado) {
 		this.estado = estado;
 	}
-	public Date getFechaFin(){
+
+	public Date getFechaFin() {
 		return DateUtilService.getInstance().changeHour(this.fecha, cantHoras);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Reserva ");
+		builder.append(padRight("Fecha = " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(fecha), 30));
+		builder.append(padRight("pago = " + pago, 15));
+		builder.append(padRight("cantHoras = " + cantHoras, 15));
+		builder.append(padRight("estado = " + estado, 15));
+		return builder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fecha == null) ? 0 : fecha.hashCode());
+		result = prime * result + idCancha;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Reserva))
+			return false;
+		Reserva other = (Reserva) obj;
+		if (fecha == null) {
+			if (other.fecha != null)
+				return false;
+		} else if (!fecha.equals(other.fecha))
+			return false;
+		if (idCancha != other.idCancha)
+			return false;
+		return true;
+	}
+
+	private String padRight(String s, int n) {
+		return String.format("%1$-" + n + "s", s);
+	}
+
+	private String padLeft(String s, int n) {
+		return String.format("%1$" + n + "s", s);
+	}
+
 }

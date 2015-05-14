@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.turnos.enums.ReservaEstado;
@@ -153,6 +152,11 @@ public class ReservaService {
 	public void reservar(Reserva reserva) throws SQLException {
 		Persistencia.getInstance().insert(reserva);
 		reservas.add(reserva);
+	}
+	
+	public void updateReserva(Reserva reserva) throws SQLException{
+		Persistencia.getInstance().update(reserva);
+		reservas.set(reservas.indexOf(reserva), reserva); 
 	}
 
 	public List<ClienteBean> clientesNoCumplidores() {
