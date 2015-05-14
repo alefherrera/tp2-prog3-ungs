@@ -500,10 +500,13 @@ public class ReservaPage extends JFrame {
 		cmbCanchas.setSelectedIndex(0);
 		cmbClientes.setSelectedIndex(0);
 		cmbHorarios.setSelectedIndex(0);
-		txtSena.setText("");
+		txtSena.setText("0");
 		sliderHoras.setValue(1);
 		txtNombre.setText("");
 		txtNumeroTel.setText("");
+		
+		pnlNuevoCliente.setVisible(true);
+		
 	}
 
 }
