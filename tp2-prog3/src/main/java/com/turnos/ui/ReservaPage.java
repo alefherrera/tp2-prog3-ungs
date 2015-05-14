@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -21,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -357,8 +360,16 @@ public class ReservaPage extends JFrame {
 						horariosAlt = new ArrayList<HorarioAlternativo>();
 						e1.printStackTrace();
 					}
-					updateMessage("No se puede guardar en este horario. Horarios sugeridos: "
-							+ horariosAlt);
+					
+					
+					
+					String listadoHorariosDisponibles = String.join(System.lineSeparator(), horariosAlt.stream().map(x-> x.toString()).collect(Collectors.toList()));
+					
+					int dialogResult = JOptionPane.showConfirmDialog(null,
+							"No se puede reservar a esta hora/cancha. Te propongo un listado de horarios disponibles:" + System.lineSeparator() + listadoHorariosDisponibles ,
+							"No se pudo reservar!", JOptionPane.DEFAULT_OPTION);
+					
+					updateMessage("No se puede guardar en este horario");
 				}
 
 			}

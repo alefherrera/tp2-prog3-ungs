@@ -1,5 +1,6 @@
 package com.turnos.service.bean;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.turnos.models.domain.Cancha;
@@ -36,7 +37,7 @@ public class HorarioAlternativo {
 		StringBuilder sb = new StringBuilder();
 		sb.append("idCancha: " + idCancha);
 		sb.append(" | ");
-		sb.append("horario: " + horario);
+		sb.append("horario: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(horario));
 		return sb.toString();
 	}
 	

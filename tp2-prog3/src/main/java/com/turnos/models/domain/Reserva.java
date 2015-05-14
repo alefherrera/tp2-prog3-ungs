@@ -26,13 +26,7 @@ public class Reserva {
 	@DatabaseField
 	private ReservaEstado estado;
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
+	
 
 	public Reserva() {
 
@@ -42,7 +36,15 @@ public class Reserva {
 		super();
 		this.fecha = fecha;
 	}
+	
+	public int getId() {
+		return id;
+	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public Date getFecha() {
 		return fecha;
 	}
