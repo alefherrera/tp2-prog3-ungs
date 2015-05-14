@@ -17,13 +17,21 @@ public class JImagePanel extends JPanel {
 	  // Here, we use the constructor to load the image. This
 	  // can vary depending on the use case of the panel.
 	  public JImagePanel(String fileName) throws IOException {
+		  if (fileName.isEmpty()) return;
 	    backgroundImage = ImageIO.read(new File(fileName));
 	  }
 
 	  public void paintComponent(Graphics g) {
 	    super.paintComponent(g);
-
+	    if (backgroundImage == null) return;
 	    // Draw the background image.
-	    g.drawImage(backgroundImage, 0, 0, this);
+	    g.drawImage(backgroundImage, 0, 0, this.getWidth(), this.getHeight(), this);
 	  }
+	  
+	  public void changeImage(String fileName) throws IOException{
+		  backgroundImage = ImageIO.read(new File(fileName));
+		  revalidate();
+		  repaint();
+	  }
+	  
 	}

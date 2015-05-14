@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -155,6 +156,7 @@ public class ReservaPage extends JFrame {
 	private JTextField txtNombre;
 	private JTextField txtNumeroTel;
 	private JPanel pnlNuevoCliente;
+	private JImagePanel imagen;
 
 	/**
 	 * Launch the application.
@@ -188,12 +190,11 @@ public class ReservaPage extends JFrame {
 		cmbClientes = new JComboBox<Cliente>();
 		cmbCanchas = new JComboBox<Cancha>();
 		cmbHorarios = new JComboBox<String>();
-		lblStatus = new JLabel("");
 
 		datePickerModel = new UtilDateModel();
-		datePickerModel.setDate(Calendar.getInstance().get(Calendar.YEAR), Calendar
-				.getInstance().get(Calendar.MONTH),
-				Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+		datePickerModel.setDate(Calendar.getInstance().get(Calendar.YEAR),
+				Calendar.getInstance().get(Calendar.MONTH), Calendar
+						.getInstance().get(Calendar.DAY_OF_MONTH));
 		datePickerModel.setSelected(true);
 		datePanel = new JDatePanelImpl(datePickerModel);
 		datePicker = new JDatePickerImpl(datePanel);
@@ -221,8 +222,16 @@ public class ReservaPage extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (cmbClientes.getSelectedIndex() == 0)
 					pnlNuevoCliente.setVisible(true);
-				else
+				else {
+					try {
+						imagen.changeImage(((Cliente) cmbClientes.getModel()
+								.getSelectedItem()).getImagen());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					pnlNuevoCliente.setVisible(false);
+				}
 			}
 		});
 		contentPane.add(cmbClientes);
@@ -266,15 +275,6 @@ public class ReservaPage extends JFrame {
 		lblHorarios.setBounds(16, 102, 108, 23);
 		contentPane.add(lblHorarios);
 
-		JPanel panel = new JPanel();
-		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
-				null));
-		panel.setBounds(0, 381, 362, 31);
-		contentPane.add(panel);
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-
-		panel.add(lblStatus);
-
 		btnReservar = new JButton("Reservar!");
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -316,7 +316,7 @@ public class ReservaPage extends JFrame {
 					updateMessage("Falta ingresar algun campo");
 					return;
 				}
-				
+
 				Calendar cal = Calendar.getInstance();
 				Reserva nuevaReserva = new Reserva();
 				cal.setTime((Date) datePicker.getModel().getValue());
@@ -324,7 +324,7 @@ public class ReservaPage extends JFrame {
 				cal.set(Calendar.MINUTE, 0);
 				cal.set(Calendar.HOUR, cmbHorarios.getSelectedIndex());
 				nuevaReserva.setFecha(cal.getTime());
-				
+
 				nuevaReserva.setIdCancha(((Cancha) cmbCanchas.getModel()
 						.getSelectedItem()).getId());
 				nuevaReserva.setIdCliente(((Cliente) cmbClientes.getModel()
@@ -333,7 +333,7 @@ public class ReservaPage extends JFrame {
 
 				Double pagoEfectuado = Double.valueOf(txtSena.getText());
 				nuevaReserva.setPago(pagoEfectuado);
-				
+
 				if (pagoEfectuado.equals(Double.valueOf(0)))
 					nuevaReserva.setEstado(ReservaEstado.RESERVADO);
 				else
@@ -448,6 +448,28 @@ public class ReservaPage extends JFrame {
 		JLabel label_1 = new JLabel("Telefono");
 		label_1.setBounds(10, 43, 46, 20);
 		pnlNuevoCliente.add(label_1);
+		lblStatus = new JLabel("");
+
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 80, 142, 79);
+		pnlNuevoCliente.add(panel);
+		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
+				null));
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+		panel.add(lblStatus);
+
+		try {
+			imagen = new JImagePanel("");
+			imagen.setLocation(16, 327);
+			imagen.setSize(138, 73);
+			contentPane.add(imagen);
+
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// panel.setBackground(new Color(176, 196, 222));
 
 	}
 
@@ -467,14 +489,14 @@ public class ReservaPage extends JFrame {
 
 		return resul;
 	}
-	
-	private void cleanForm(){
+
+	private void cleanForm() {
 		datePickerModel = new UtilDateModel();
-		datePickerModel.setDate(Calendar.getInstance().get(Calendar.YEAR), Calendar
-				.getInstance().get(Calendar.MONTH),
-				Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+		datePickerModel.setDate(Calendar.getInstance().get(Calendar.YEAR),
+				Calendar.getInstance().get(Calendar.MONTH), Calendar
+						.getInstance().get(Calendar.DAY_OF_MONTH));
 		datePickerModel.setSelected(true);
-		
+
 		cmbCanchas.setSelectedIndex(0);
 		cmbClientes.setSelectedIndex(0);
 		cmbHorarios.setSelectedIndex(0);
@@ -483,5 +505,5 @@ public class ReservaPage extends JFrame {
 		txtNombre.setText("");
 		txtNumeroTel.setText("");
 	}
-	
+
 }
