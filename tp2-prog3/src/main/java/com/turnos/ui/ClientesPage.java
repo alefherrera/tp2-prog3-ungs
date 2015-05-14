@@ -10,7 +10,12 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 
 import javax.swing.JButton;
@@ -45,6 +50,7 @@ public class ClientesPage extends JFrame {
 	private JButton btnSubirImagen;
 
 	final JFileChooser fc = new JFileChooser();
+	private String imagePath = "";
 
 	/**
 	 * Launch the application.
@@ -128,7 +134,7 @@ public class ClientesPage extends JFrame {
 				Cliente nuevoCliente = new Cliente();
 				nuevoCliente.setNombre(txtNombre.getText());
 				nuevoCliente.setTelefono(Integer.valueOf(txtTelefono.getText()));
-
+				nuevoCliente.setImagen(subirImagen());
 				try {
 					Persistencia.getInstance().insert(nuevoCliente);
 					cleanForm();
@@ -217,6 +223,9 @@ public class ClientesPage extends JFrame {
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
 						// TODO: guardar el archivo y guardar string en bd
 						File file = fc.getSelectedFile();
+						imagePath = file.getAbsolutePath();
+						
+
 						// This is where a real application would open the file.
 						// log.append("Opening: " + file.getName() + "." +
 						// newline);
@@ -234,6 +243,35 @@ public class ClientesPage extends JFrame {
 		}
 
 	}
+	
+	private String subirImagen(){
+		if (imagePath.isEmpty()) return "";
+		File file = new File(imagePath);
+		String ret = file.getName();
+		FileChannel source = null;
+		FileChannel dest = null;
+		try {
+			source = new FileInputStream(file).getChannel();
+			dest = new FileOutputStream(ret).getChannel();
+			dest.transferFrom(source, 0, source.size());
+
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} finally {
+			try {
+				source.close();
+				dest.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		return ret;
+	}
 
 	protected void setStatus(String msg) {
 		lblStatusMamis.setText(msg);
@@ -242,6 +280,7 @@ public class ClientesPage extends JFrame {
 	protected void cleanForm() {
 		txtNombre.setText("");
 		txtTelefono.setText("");
+		imagePath = "";
 		this.setTitle("Cliente");
 	}
 
