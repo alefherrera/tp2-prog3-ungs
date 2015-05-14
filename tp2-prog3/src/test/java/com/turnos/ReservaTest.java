@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.turnos.enums.ReservaEstado;
+import com.turnos.exceptions.ReservaException;
 import com.turnos.models.domain.Cancha;
 import com.turnos.models.domain.Cliente;
 import com.turnos.models.domain.Reserva;
@@ -24,7 +25,7 @@ public class ReservaTest {
 	private Cliente cliente;
 	
 	@Before
-	public void GenerarContexto() throws SQLException{
+	public void GenerarContexto() throws SQLException, ReservaException{
 		Persistencia p = Persistencia.getInstance();
 		//regenero la bd limpia
 		p.dropTable(Cliente.class);
@@ -98,7 +99,7 @@ public class ReservaTest {
 	
 	//• Permitir reservas de m´as de una hora, sin tener que hacer reservas consecutivas
 	@Test
-	public void ReservasConcecutivasTest() throws SQLException{
+	public void ReservasConcecutivasTest() throws SQLException, ReservaException{
 		ReservaService.getInstance().reservar(getFecha(10), cliente, cancha, 2, ReservaEstado.SEÑADO, 50);
 	}
 	

@@ -36,6 +36,7 @@ import net.sourceforge.jdatepicker.impl.JDatePickerImpl;
 import net.sourceforge.jdatepicker.impl.UtilDateModel;
 
 import com.turnos.enums.ReservaEstado;
+import com.turnos.exceptions.ReservaException;
 import com.turnos.models.domain.Cancha;
 import com.turnos.models.domain.Cliente;
 import com.turnos.models.domain.Reserva;
@@ -333,6 +334,9 @@ public class ReservaPage extends JFrame {
 					ReservaService.getInstance().reservar(nuevaReserva);
 					updateMessage("Reserva efectuada correctamente.");
 				} catch (SQLException e1) {
+					updateMessage("Ups! No se pudo guardar la reserva...");
+					e1.printStackTrace();
+				} catch (ReservaException e1) {
 					updateMessage("Ups! No se pudo guardar la reserva...");
 					e1.printStackTrace();
 				}

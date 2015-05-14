@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.turnos.enums.ReservaEstado;
+import com.turnos.exceptions.ReservaException;
 import com.turnos.models.domain.Cancha;
 import com.turnos.models.domain.Cliente;
 import com.turnos.models.domain.Reserva;
@@ -138,7 +139,7 @@ public class ReservaService {
 
 	public void reservar(Date dia, Cliente cliente, Cancha cancha,
 			int cantidadHoras, ReservaEstado estado, double pago)
-			throws SQLException {
+			throws SQLException, ReservaException {
 		Reserva reserva = new Reserva();
 		reserva.setFecha(dia);
 		reserva.setIdCliente(cliente.getId());
@@ -149,7 +150,9 @@ public class ReservaService {
 		reservar(reserva);
 	}
 
-	public void reservar(Reserva reserva) throws SQLException {
+	public void reservar(Reserva reserva) throws SQLException, ReservaException {
+		if (getOcupados(reserva.getFecha(), reserva.getIdCancha()).size() != 0)
+			throw new ReservaException();		
 		Persistencia.getInstance().insert(reserva);
 		reservas.add(reserva);
 	}
