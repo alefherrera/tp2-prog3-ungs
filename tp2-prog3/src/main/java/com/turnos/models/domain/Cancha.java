@@ -53,6 +53,4 @@ public class Cancha {
 		return builder.toString();
 	}
 
-	
-	
 }

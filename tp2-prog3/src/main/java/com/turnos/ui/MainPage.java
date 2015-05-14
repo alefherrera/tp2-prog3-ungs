@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.turnos.service.ApplicationService;
+
 public class MainPage {
 
 	private JFrame frmWaltercancha;
@@ -21,6 +23,7 @@ public class MainPage {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					ApplicationService.getInstance().InitDb();
 					MainPage window = new MainPage();
 					window.frmWaltercancha.setVisible(true);
 				} catch (Exception e) {

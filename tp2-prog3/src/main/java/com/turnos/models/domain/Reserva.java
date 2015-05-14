@@ -10,6 +10,8 @@ import com.turnos.service.DateUtilService;
 
 @DatabaseTable(tableName = "reserva")
 public class Reserva {
+	@DatabaseField(allowGeneratedIdInsert = true, generatedId = true)
+	private int id;
 	@DatabaseField
 	private Date fecha;
 	@DatabaseField
@@ -18,11 +20,18 @@ public class Reserva {
 	private int cantHoras;
 	@DatabaseField
 	private int idCliente;
-
 	@DatabaseField
 	private int idCancha;
 	@DatabaseField
 	private ReservaEstado estado;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public Reserva() {
 
@@ -89,7 +98,8 @@ public class Reserva {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Reserva ");
-		builder.append(padRight("Fecha = " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(fecha), 30));
+		builder.append(padRight("Fecha = "
+				+ new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(fecha), 30));
 		builder.append(padRight("pago = " + pago, 15));
 		builder.append(padRight("cantHoras = " + cantHoras, 15));
 		builder.append(padRight("estado = " + estado, 15));

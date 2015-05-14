@@ -27,12 +27,13 @@ public class Persistencia {
 	
 	public <T> void createTable(Class<T> c) throws SQLException {
 		OpenDb();
-		TableUtils.createTable(connectionSource, c);		
+		TableUtils.createTableIfNotExists(connectionSource, c);		
 		closeDb();
 	}
 	
 	public <T> void dropTable(Class<T> c) throws SQLException {
 		OpenDb();
+		
 		TableUtils.dropTable(connectionSource, c, true);		
 		closeDb();
 	}
