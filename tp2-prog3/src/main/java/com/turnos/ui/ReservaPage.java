@@ -42,6 +42,7 @@ import com.turnos.models.domain.Cliente;
 import com.turnos.models.domain.Reserva;
 import com.turnos.persistencia.Persistencia;
 import com.turnos.service.ReservaService;
+import com.turnos.service.bean.HorarioAlternativo;
 
 public class ReservaPage extends JFrame {
 
@@ -136,7 +137,7 @@ public class ReservaPage extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private UtilDateModel model;
+	private UtilDateModel datePickerModel;
 	private JDatePanelImpl datePanel;
 	private JDatePickerImpl datePicker;
 	private JLabel lblCliente;
@@ -189,12 +190,12 @@ public class ReservaPage extends JFrame {
 		cmbHorarios = new JComboBox<String>();
 		lblStatus = new JLabel("");
 
-		model = new UtilDateModel();
-		model.setDate(Calendar.getInstance().get(Calendar.YEAR), Calendar
+		datePickerModel = new UtilDateModel();
+		datePickerModel.setDate(Calendar.getInstance().get(Calendar.YEAR), Calendar
 				.getInstance().get(Calendar.MONTH),
 				Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-		model.setSelected(true);
-		datePanel = new JDatePanelImpl(model);
+		datePickerModel.setSelected(true);
+		datePanel = new JDatePanelImpl(datePickerModel);
 		datePicker = new JDatePickerImpl(datePanel);
 		SpringLayout springLayout = (SpringLayout) datePicker.getLayout();
 		springLayout.putConstraint(SpringLayout.SOUTH,
@@ -311,11 +312,19 @@ public class ReservaPage extends JFrame {
 					}
 				}
 
-				if (!validForm())
+				if (!validForm()) {
+					updateMessage("Falta ingresar algun campo");
 					return;
-
+				}
+				
+				Calendar cal = Calendar.getInstance();
 				Reserva nuevaReserva = new Reserva();
-				nuevaReserva.setFecha((Date) datePicker.getModel().getValue());
+				cal.setTime((Date) datePicker.getModel().getValue());
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.HOUR, cmbHorarios.getSelectedIndex());
+				nuevaReserva.setFecha(cal.getTime());
+				
 				nuevaReserva.setIdCancha(((Cancha) cmbCanchas.getModel()
 						.getSelectedItem()).getId());
 				nuevaReserva.setIdCliente(((Cliente) cmbClientes.getModel()
@@ -324,8 +333,8 @@ public class ReservaPage extends JFrame {
 
 				Double pagoEfectuado = Double.valueOf(txtSena.getText());
 				nuevaReserva.setPago(pagoEfectuado);
-
-				if (pagoEfectuado.equals(0))
+				
+				if (pagoEfectuado.equals(Double.valueOf(0)))
 					nuevaReserva.setEstado(ReservaEstado.RESERVADO);
 				else
 					nuevaReserva.setEstado(ReservaEstado.SEÑADO);
@@ -333,12 +342,23 @@ public class ReservaPage extends JFrame {
 				try {
 					ReservaService.getInstance().reservar(nuevaReserva);
 					updateMessage("Reserva efectuada correctamente.");
+					cleanForm();
 				} catch (SQLException e1) {
 					updateMessage("Ups! No se pudo guardar la reserva...");
 					e1.printStackTrace();
-				} catch (ReservaException e1) {
-					updateMessage("Ups! No se pudo guardar la reserva...");
-					e1.printStackTrace();
+				} catch (ReservaException e2) {
+					ArrayList<HorarioAlternativo> horariosAlt = null;
+					try {
+						horariosAlt = (ArrayList<HorarioAlternativo>) ReservaService
+								.getInstance().horariosAlternativos(
+										nuevaReserva.getFecha(),
+										nuevaReserva.getIdCancha());
+					} catch (SQLException e1) {
+						horariosAlt = new ArrayList<HorarioAlternativo>();
+						e1.printStackTrace();
+					}
+					updateMessage("No se puede guardar en este horario. Horarios sugeridos: "
+							+ horariosAlt);
 				}
 
 			}
@@ -439,8 +459,29 @@ public class ReservaPage extends JFrame {
 		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 
-	protected boolean validForm() {
+	private boolean validForm() {
+		boolean resul = true;
 
-		return true;
+		resul &= datePicker.getModel().getValue() != null;
+		resul &= !txtSena.getText().isEmpty();
+
+		return resul;
 	}
+	
+	private void cleanForm(){
+		datePickerModel = new UtilDateModel();
+		datePickerModel.setDate(Calendar.getInstance().get(Calendar.YEAR), Calendar
+				.getInstance().get(Calendar.MONTH),
+				Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+		datePickerModel.setSelected(true);
+		
+		cmbCanchas.setSelectedIndex(0);
+		cmbClientes.setSelectedIndex(0);
+		cmbHorarios.setSelectedIndex(0);
+		txtSena.setText("");
+		sliderHoras.setValue(1);
+		txtNombre.setText("");
+		txtNumeroTel.setText("");
+	}
+	
 }

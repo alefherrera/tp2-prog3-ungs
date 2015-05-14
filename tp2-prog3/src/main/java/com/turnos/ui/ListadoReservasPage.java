@@ -177,6 +177,9 @@ public class ListadoReservasPage extends JFrame {
 		btnPagada = new JButton("Pagada");
 		btnPagada.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (lstReservas.isSelectionEmpty())
+					return;
+				
 				int dialogResult = JOptionPane.showConfirmDialog(null,
 						"Esta seguro que desea marcarlas como pagadas?",
 						"Confirmacion", JOptionPane.YES_NO_OPTION);
@@ -192,6 +195,9 @@ public class ListadoReservasPage extends JFrame {
 		btnAusente = new JButton("Ausente");
 		btnAusente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (lstReservas.isSelectionEmpty())
+					return;
+				
 				int dialogResult = JOptionPane.showConfirmDialog(null,
 						"Esta seguro que desea marcarlas como ausentes?",
 						"Confirmacion", JOptionPane.YES_NO_OPTION);

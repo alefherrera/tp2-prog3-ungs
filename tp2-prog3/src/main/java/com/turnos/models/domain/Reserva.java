@@ -7,6 +7,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.turnos.enums.ReservaEstado;
 import com.turnos.service.DateUtilService;
+import com.turnos.service.StringUtilService;
 
 @DatabaseTable(tableName = "reserva")
 public class Reserva {
@@ -98,11 +99,11 @@ public class Reserva {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Reserva ");
-		builder.append(padRight("Fecha = "
+		builder.append(StringUtilService.padRight("Fecha = "
 				+ new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(fecha), 30));
-		builder.append(padRight("pago = " + pago, 15));
-		builder.append(padRight("cantHoras = " + cantHoras, 15));
-		builder.append(padRight("estado = " + estado, 15));
+		builder.append(StringUtilService.padRight("pago = " + pago, 15));
+		builder.append(StringUtilService.padRight("cantHoras = " + cantHoras, 15));
+		builder.append(StringUtilService.padRight("estado = " + estado, 15));
 		return builder.toString();
 	}
 
@@ -134,12 +135,6 @@ public class Reserva {
 		return true;
 	}
 
-	private String padRight(String s, int n) {
-		return String.format("%1$-" + n + "s", s);
-	}
 
-	private String padLeft(String s, int n) {
-		return String.format("%1$" + n + "s", s);
-	}
 
 }

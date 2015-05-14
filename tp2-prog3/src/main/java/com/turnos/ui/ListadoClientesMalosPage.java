@@ -29,6 +29,7 @@ import com.turnos.enums.ReservaEstado;
 import com.turnos.models.domain.Reserva;
 import com.turnos.service.DateUtilService;
 import com.turnos.service.ReservaService;
+import com.turnos.service.bean.ClienteBean;
 
 public class ListadoClientesMalosPage extends JFrame {
 
@@ -74,7 +75,7 @@ public class ListadoClientesMalosPage extends JFrame {
 	private JDatePickerImpl dpHasta;
 
 	private JLabel lblDesde;
-	private JList<Reserva> lstReservas;
+	private JList<ClienteBean> lstClientesMalos;
 	private JPanel panel;
 	private JLabel lblStatus;
 	private JLabel lblHasta;
@@ -122,7 +123,7 @@ public class ListadoClientesMalosPage extends JFrame {
 		dpDesde.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateListaReservas();
+				//updateListaReservas();
 			}
 		});
 		contentPane.setLayout(null);
@@ -147,7 +148,7 @@ public class ListadoClientesMalosPage extends JFrame {
 		dpHasta.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateListaReservas();
+				//updateListaReservas();
 			}
 		});
 		contentPane.setLayout(null);
@@ -157,16 +158,16 @@ public class ListadoClientesMalosPage extends JFrame {
 		scrollPane.setBounds(10, 51, 524, 354);
 		contentPane.add(scrollPane);
 
-		lstReservas = new JList<Reserva>();
+		lstClientesMalos = new JList<ClienteBean>();
 		try {
-			lstReservas.setModel(new GenericListModel<Reserva>(ReservaService
-					.getInstance().getReservas()));
+			lstClientesMalos.setModel(new GenericListModel<ClienteBean>(
+					ReservaService.getInstance().clientesNoCumplidores()));
 		} catch (SQLException e1) {
-			lstReservas.setModel(new GenericListModel<Reserva>(
-					new ArrayList<Reserva>()));
+			lstClientesMalos.setModel(new GenericListModel<ClienteBean>(
+					new ArrayList<ClienteBean>()));
 			e1.printStackTrace();
 		}
-		scrollPane.setViewportView(lstReservas);
+		scrollPane.setViewportView(lstClientesMalos);
 
 		panel = new JPanel();
 		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
@@ -184,51 +185,32 @@ public class ListadoClientesMalosPage extends JFrame {
 
 	}
 
-	private void updateMessage(String msg) {
-		lblStatus.setText(msg);
-	}
-
-	private void updateReservas(ReservaEstado nuevoEstado) {
-		List<Reserva> listaReservas = lstReservas.getSelectedValuesList();
-
-		for (Reserva reserva : listaReservas) {
-			reserva.setEstado(nuevoEstado);
-			try {
-				ReservaService.getInstance().updateReserva(reserva);
-			} catch (SQLException e) {
-				System.out
-						.println("La siguiente reserva no se pudo actualizar: "
-								+ reserva.toString());
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private void updateListaReservas() {
-		ArrayList<Reserva> reservasFiltradas = null;
-		DateUtilService serv = DateUtilService.getInstance();
-		try {
-			Date fechaDesde = serv.getZeroTimeDate((Date) dpDesde.getModel()
-					.getValue());
-			Date fechaHasta = serv.getZeroTimeDate((Date) dpHasta.getModel()
-					.getValue());
-
-			reservasFiltradas = (ArrayList<Reserva>) ReservaService
-					.getInstance()
-					.getReservasBy(
-							reservita -> fechaDesde.compareTo(serv
-									.getZeroTimeDate(reservita.getFecha()))
-									* serv.getZeroTimeDate(reservita.getFecha())
-											.compareTo(fechaHasta) > 0);
-		} catch (SQLException e1) {
-			reservasFiltradas = new ArrayList<Reserva>();
-			e1.printStackTrace();
-		} catch (Exception ex) {
-			reservasFiltradas = new ArrayList<Reserva>();
-			ex.printStackTrace();
-		}
-
-		lstReservas.setModel(new GenericListModel<Reserva>(reservasFiltradas));
-
-	}
+//	private void updateListaReservas() {
+//		ArrayList<Reserva> reservasFiltradas = null;
+//		DateUtilService serv = DateUtilService.getInstance();
+//		try {
+//			Date fechaDesde = serv.getZeroTimeDate((Date) dpDesde.getModel()
+//					.getValue());
+//			Date fechaHasta = serv.getZeroTimeDate((Date) dpHasta.getModel()
+//					.getValue());
+//
+//			reservasFiltradas = (ArrayList<Reserva>) ReservaService
+//					.getInstance()
+//					.getReservasBy(
+//							reservita -> fechaDesde.compareTo(serv
+//									.getZeroTimeDate(reservita.getFecha()))
+//									* serv.getZeroTimeDate(reservita.getFecha())
+//											.compareTo(fechaHasta) > 0);
+//		} catch (SQLException e1) {
+//			reservasFiltradas = new ArrayList<Reserva>();
+//			e1.printStackTrace();
+//		} catch (Exception ex) {
+//			reservasFiltradas = new ArrayList<Reserva>();
+//			ex.printStackTrace();
+//		}
+//
+//		lstClientesMalos.setModel(new GenericListModel<Reserva>(
+//				reservasFiltradas));
+//
+//	}
 }

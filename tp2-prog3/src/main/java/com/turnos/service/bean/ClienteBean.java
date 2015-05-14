@@ -1,9 +1,7 @@
 package com.turnos.service.bean;
 
-import java.util.Arrays;
-
-import com.turnos.models.domain.Cancha;
 import com.turnos.models.domain.Cliente;
+import com.turnos.service.StringUtilService;
 
 public class ClienteBean {
 	private Cliente cliente;
@@ -30,8 +28,8 @@ public class ClienteBean {
 	public String toString() {
 		// TODO Auto-generated method stub
 		StringBuilder sb = new StringBuilder();
-		sb.append(cliente.getNombre() + " ");
-		sb.append(ausente);	
+		sb.append(StringUtilService.padRight(cliente.getNombre(), 20));
+		sb.append(StringUtilService.padRight("Ausencias -> " + ausente, 20));
 		return  sb.toString();
 	}
 

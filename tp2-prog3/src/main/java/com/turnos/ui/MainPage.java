@@ -90,8 +90,17 @@ public class MainPage {
 					new ListadoReservasPage().setVisible(true);
 				}
 			});
-			btnListadoDeReservas.setBounds(190, 160, 154, 98);
+			btnListadoDeReservas.setBounds(113, 163, 154, 98);
 			frmWaltercancha.getContentPane().add(btnListadoDeReservas);
+			
+			JButton btnListadoClientesIncumplidores = new JButton("Listado Clientes ausentes");
+			btnListadoClientesIncumplidores.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					new ListadoClientesMalosPage().setVisible(true);
+				}
+			});
+			btnListadoClientesIncumplidores.setBounds(277, 163, 154, 98);
+			frmWaltercancha.getContentPane().add(btnListadoClientesIncumplidores);
 			panel = new JImagePanel("resources/fondo.jpg");
 			//panel.setBackground(new Color(176, 196, 222));
 			panel.setBounds(0, 0, 544, 370);
