@@ -2,6 +2,8 @@ package com.turnos.ui;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
 
@@ -29,7 +31,12 @@ public class JImagePanel extends JPanel {
 	  }
 	  
 	  public void changeImage(String fileName) throws IOException{
+		  if (fileName == null || fileName.isEmpty()){
+			  this.setVisible(false);
+			  return;
+		  }
 		  backgroundImage = ImageIO.read(new File(fileName));
+		  this.setVisible(true);
 		  revalidate();
 		  repaint();
 	  }

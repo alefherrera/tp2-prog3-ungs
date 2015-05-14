@@ -181,7 +181,7 @@ public class ReservaPage extends JFrame {
 		setResizable(false);
 		setTitle("Reservas");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 368, 440);
+		setBounds(100, 100, 368, 488);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -448,18 +448,18 @@ public class ReservaPage extends JFrame {
 		JLabel label_1 = new JLabel("Telefono");
 		label_1.setBounds(10, 43, 46, 20);
 		pnlNuevoCliente.add(label_1);
-		lblStatus = new JLabel("");
-
-		JPanel panel = new JPanel();
-		panel.setBounds(0, 80, 142, 79);
-		pnlNuevoCliente.add(panel);
-		panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
-				null));
-		panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
-
-		panel.add(lblStatus);
 
 		try {
+			lblStatus = new JLabel("");
+			
+					JPanel panel = new JPanel();
+					panel.setBounds(0, 422, 362, 37);
+					contentPane.add(panel);
+					panel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
+							null));
+					panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+					
+							panel.add(lblStatus);
 			imagen = new JImagePanel("");
 			imagen.setLocation(16, 327);
 			imagen.setSize(138, 73);
@@ -508,5 +508,5 @@ public class ReservaPage extends JFrame {
 		pnlNuevoCliente.setVisible(true);
 		
 	}
-
+	
 }
